@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { FiEye, FiEyeOff, FiLock, FiMail } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FiArrowLeft, FiEye, FiEyeOff, FiLock, FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -10,7 +8,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-
+  
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -28,8 +26,6 @@ const Login = () => {
       } else if (email === 'hr@gmail.com') {
         localStorage.setItem('role', 'hr');
         navigate('/hr/hrdashboard');
-
-
       } else {
         alert('Invalid credentials');
       }
@@ -50,6 +46,7 @@ const Login = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email Input */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiMail className="h-5 w-5 text-gray-400" />
@@ -64,6 +61,7 @@ const Login = () => {
                 />
               </div>
 
+              {/* Password Input */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiLock className="h-5 w-5 text-gray-400" />
@@ -89,6 +87,7 @@ const Login = () => {
                 </button>
               </div>
 
+              {/* Remember me & Forgot password */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -108,33 +107,17 @@ const Login = () => {
                 </a>
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition ${isLoading ? 'opacity-75 cursor-not-allowed' : ''
-                  }`}
+                className={`w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Signing in...
                   </span>
@@ -143,39 +126,15 @@ const Login = () => {
                 )}
               </button>
             </form>
-
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <FcGoogle className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <FaGithub className="h-5 w-5 text-gray-800" />
-                </button>
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <FaLinkedin className="h-5 w-5 text-blue-600" />
-                </button>
-              </div>
-            </div>
           </div>
+        </div>
+
+        {/* Back to Home Link */}
+        <div className="text-center mt-6">
+          <a href="/" className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-cyan-600 transition-colors">
+            <FiArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </a>
         </div>
       </div>
     </div>
