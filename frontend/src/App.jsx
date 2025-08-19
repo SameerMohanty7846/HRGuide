@@ -26,6 +26,10 @@ import AuthLayout from './layout/AuthLayout'
 import AdminDashboard from './pages/AdminDashboard';
 import EmployeeDashbord from './pages/EmployeeDashbord';
 import HrDashboard from './pages/HrDashboard';
+import HomePage from './pages/HomePage';
+import About from './pages/About';
+import Policies from './pages/Policies';
+import Team from './pages/Team';
 
 const App = () => {
   return (
@@ -83,7 +87,16 @@ const App = () => {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
         </Route>
+        {/* Home Page */}
+        <Route path="/" element={<HomePage />} />
 
+
+        <Route path="/about" element={<About />} />
+
+        <Route path="/policies" element={<Policies />} />
+
+
+        <Route path="/team" element={<Team />} />
       </Routes>
     </BrowserRouter>
   );
