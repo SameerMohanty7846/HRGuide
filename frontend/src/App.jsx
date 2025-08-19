@@ -1,9 +1,11 @@
 import React from 'react'
+import Header from './layout/Header'
 
 const App = () => {
   return (
     <div>
-      <h1 className='bg-blue-500'>HELLO</h1>
+      <Header/>
+      
     </div>
   )
 }
