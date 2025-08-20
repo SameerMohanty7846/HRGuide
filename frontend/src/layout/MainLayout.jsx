@@ -8,22 +8,23 @@ const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-flex flex-col min-h-full sm:sticky sm:top-0
+">
       {/* Header */}
       <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       {/* Content Section */}
-      <div className="flex flex-1 relative">
-        {/* Sidebar (fixed only on mobile) */}
+      <div className="flex flex-1 w-full relative">
+        {/* Sidebar */}
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(false)} />
 
         {/* Main Content */}
-        <main className="flex-1 p-4 bg-gray-50 min-h-[calc(100vh-4rem)] sm:min-h-0">
+        <main className="flex-1 p-4 bg-gray-50">
           <Outlet />
         </main>
       </div>
 
-      {/* Footer always stays at the bottom */}
+      {/* Footer */}
       <Footer />
     </div>
   );
