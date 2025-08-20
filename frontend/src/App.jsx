@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-
 // Pages
 import Login from './pages/Login';
 import AddEmployee from './pages/AddEmployee';
@@ -21,8 +20,8 @@ import TaskManagement from './pages/TaskManagement';
 import ViewEmployees from './pages/ViewEmployees';
 import PrivateRoute from './routes/PrivateRoute';
 
-import MainLayout from './layout/MainLayout'
-import AuthLayout from './layout/AuthLayout'
+import MainLayout from './layout/MainLayout';
+import AuthLayout from './layout/AuthLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import EmployeeDashbord from './pages/EmployeeDashbord';
 import HrDashboard from './pages/HrDashboard';
@@ -35,11 +34,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* ========== ADMIN ROUTES ========== */}
+        {/* ========== ADMIN + HR ROUTES ========== */}
         <Route
-          element={<PrivateRoute role="admin"><MainLayout /></PrivateRoute>}
+          element={<PrivateRoute role={['admin', 'hr']}><MainLayout /></PrivateRoute>}
         >
+          {/* Admin Routes */}
           <Route path="/admin/admindashboard" element={<AdminDashboard />} />
           <Route path="/admin/addemployee" element={<AddEmployee />} />
           <Route path="/admin/viewemployees" element={<ViewEmployees />} />
@@ -51,27 +50,8 @@ const App = () => {
           <Route path="/admin/salary-policy" element={<SalaryPolicyForm />} />
           <Route path="/admin/payroll" element={<EmployeePayroll />} />
 
-        </Route>
-
-        {/* ========== EMPLOYEE ROUTES ========== */}
-        <Route
-          element={<PrivateRoute role="employee"><MainLayout /></PrivateRoute>}
-        >
-          <Route path="/employee/employeedashboard" element={<EmployeeDashbord />} />
-          <Route path="/employee/assign-task" element={<AssignTask />} />
-          <Route path="/employee/task-management" element={<TaskManagement />} />
-          <Route path="/employee/change-password" element={<ChangePassword />} />
-          <Route path="/employee/permissions" element={<GrantedPermissions />} />
-          <Route path="/employee/leave-apply" element={<ApplyLeave />} />
-          <Route path="/employee/leave-dashboard" element={<LeaveDashboard />} />
-        </Route>
-
-        {/* ========== HR ROUTES ========== */}
-        <Route
-          element={<PrivateRoute role="hr"><MainLayout /></PrivateRoute>}
-        >
+          {/* HR Routes */}
           <Route path="/hr/hrdashboard" element={<HrDashboard />} />
-
           <Route path="/hr/policy" element={<HRPolicy />} />
           <Route path="/hr/leave-policy" element={<HRLeavePolicy />} />
           <Route path="/hr/leave-applications" element={<LeaveDashboard />} />
@@ -83,19 +63,39 @@ const App = () => {
           <Route path="/hr/permissions" element={<GrantedPermissions />} />
         </Route>
 
+        {/* ========== EMPLOYEE + HR SHARED ROUTE ========== */}
+        <Route
+          path="/employee/assign-task"
+          element={
+            <PrivateRoute role={['employee', 'hr']}>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<AssignTask />} />
+        </Route>
+
+        {/* ========== EMPLOYEE ROUTES ========== */}
+        <Route
+          element={<PrivateRoute role="employee"><MainLayout /></PrivateRoute>}
+        >
+          <Route path="/employee/employeedashboard" element={<EmployeeDashbord />} />
+          <Route path="/employee/task-management" element={<TaskManagement />} />
+          <Route path="/employee/change-password" element={<ChangePassword />} />
+          <Route path="/employee/permissions" element={<GrantedPermissions />} />
+          <Route path="/employee/leave-apply" element={<ApplyLeave />} />
+          <Route path="/employee/leave-dashboard" element={<LeaveDashboard />} />
+        </Route>
+
         {/* ========== AUTH ROUTES ========== */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
         </Route>
-        {/* Home Page */}
+
+        {/* ========== PUBLIC ROUTES ========== */}
         <Route path="/" element={<HomePage />} />
-
-
         <Route path="/about" element={<About />} />
-
         <Route path="/policies" element={<Policies />} />
-
-
         <Route path="/team" element={<Team />} />
       </Routes>
     </BrowserRouter>

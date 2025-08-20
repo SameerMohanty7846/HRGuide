@@ -12,14 +12,12 @@ import {
   DollarSign,
   ClipboardList,
   LogOut,
-  Menu,
-  X,
   Building,
   ClipboardCheck,
   FileClock,
   UserCheck,
   Briefcase,
-  FileSpreadsheet
+  FileSpreadsheet,
 } from 'lucide-react';
 
 const roleNavigation = {
@@ -44,6 +42,7 @@ const roleNavigation = {
       submenu: [
         { path: '/admin/leave-policy', label: 'HR Leave Policy', icon: <FileText size={18} /> },
         { path: '/admin/salary-policy', label: 'Salary Policy Form', icon: <FileSpreadsheet size={18} /> },
+        { path: '/hr/policy', label: 'HR Policy', icon: <FileSpreadsheet size={18} /> },
       ],
     },
     {
@@ -107,7 +106,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const role = localStorage.getItem('role') || 'employee';
-  const userData = JSON.parse(localStorage.getItem('userData')) || { name: 'Guest User', role: 'Employee' };
+  const userData = JSON.parse(localStorage.getItem('userData')) || { name: 'Guest User' };
   const menuItems = roleNavigation[role] || [];
   const [openSubmenu, setOpenSubmenu] = useState(null);
 
@@ -126,19 +125,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 bg-black opacity-40 z-30 sm:hidden" onClick={toggleSidebar}></div>}
+      {/* Overlay backdrop only on mobile when sidebar is open */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-40 z-30 sm:hidden"
+          onClick={toggleSidebar}
+          aria-hidden="true"
+        />
+      )}
 
-    <aside
-  className={`z-40 w-72 bg-white text-gray-800 border-r border-gray-200 shadow-lg
-    transform transition-transform duration-300 ease-in-out
-    ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-    sm:relative sm:translate-x-0 sm:flex-shrink-0
-    flex flex-col min-h-full sm:sticky sm:top-0 rounded-r-xl`}
->
-
-        {/* Header */}
-       
-
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-40 w-72 bg-white text-gray-800 border-r border-gray-200 shadow-lg
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          sm:relative sm:translate-x-0 sm:flex-shrink-0
+          flex flex-col min-h-full sm:sticky sm:top-0 rounded-r-xl
+        `}
+      >
         {/* User Info */}
         <div className="flex items-center p-4 mt-2">
           <img
@@ -148,7 +152,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           />
           <div className="ml-4">
             <p className="font-semibold text-md">{userData.name}</p>
-            <p className="text-sm text-gray-500 capitalize">{userData.role}</p>
+            <p className="text-sm text-gray-500 capitalize">{role}</p>
           </div>
         </div>
 

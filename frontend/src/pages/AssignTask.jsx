@@ -1,114 +1,159 @@
-import React, { useState } from 'react';
-import { FaPlus, FaTimes, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const AssignTask = ({ isOpen, onClose, onTaskCreated }) => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState('');
-    const handleClose = () => {
-        setTitle('');
-        setDescription('');
-        setError('');
-        onClose();
-    };
+const AssignTask = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    employee_id: '',
+    employee_name: '',
+    role: '',
+    task_name: '',
+    assignment_date: '',
+    time_required: ''
+  });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSubmitting(true);
-        setError('');
-        try {
-            // Mock API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log('Task Created:', { title, description });
-            // In a real app, you would have your API client call here:
-            // await apiClient.post('/tasks', { title, description });
-            onTaskCreated();
-            handleClose();
-        } catch (err) {
-            setError('Failed to create task.',err);
-        } finally {
-            setSubmitting(false);
-        }
-    };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    if (!isOpen) return null;
+  useEffect(() => {
+    const storedUser = JSON.parse(sessionStorage.getItem('user'));
 
-    return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 animate-fade-in-up">
-                {/* Header */}
-                <div className="flex justify-between items-center p-6 border-b border-gray-200">
-                    <div className="flex items-center space-x-3">
-                        <div className="bg-blue-100 p-2 rounded-full">
-                            <FaPlus className="text-blue-600" />
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-800">Create New Task</h2>
-                    </div>
-                    <button onClick={handleClose} className="text-gray-400 hover:text-gray-600 transition-colors">
-                        <FaTimes size={22} />
-                    </button>
-                </div>
+    if (!storedUser) {
+      alert('Session expired. Please login again.');
+      navigate('/login');
+      return;
+    }
 
-                {/* Form Body */}
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    <div>
-                        <label htmlFor="title" className="text-lg font-semibold text-gray-700 mb-2 block">Title</label>
-                        <input
-                            id="title"
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-                            placeholder="e.g., Finalize project report"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="description" className="text-lg font-semibold text-gray-700 mb-2 block">Description</label>
-                        <textarea
-                            id="description"
-                            rows="4"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-                            placeholder="Provide a brief summary of the task..."
-                        ></textarea>
-                    </div>
+    setFormData(prev => ({
+      ...prev,
+      employee_id: storedUser.id,
+      employee_name: storedUser.name,
+      role: storedUser.role
+    }));
+  }, [navigate]);
 
-                    {error && (
-                        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md flex items-start space-x-3">
-                            <FaExclamationTriangle className="text-red-500 text-xl" />
-                            <div>
-                                <h3 className="font-bold text-red-800">Error</h3>
-                                <p className="text-red-700">{error}</p>
-                            </div>
-                        </div>
-                    )}
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-                    {/* Footer with Buttons */}
-                    <div className="flex justify-end items-center pt-4 space-x-4">
-                        <button
-                            type="button"
-                            onClick={handleClose}
-                            disabled={submitting}
-                            className="px-6 py-3 font-semibold text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={submitting}
-                            className="flex items-center justify-center bg-blue-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors transform hover:scale-105 disabled:bg-blue-400 disabled:scale-100"
-                        >
-                            {submitting && <FaSpinner className="animate-spin mr-2" />}
-                            {submitting ? "Creating..." : "Create Task"}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post('http://localhost:2000/api/hr/assigntasks', formData);
+      if (response.status === 200) {
+        alert('Task Assigned Successfully!');
+        setFormData(prev => ({
+          ...prev,
+          task_name: '',
+          assignment_date: '',
+          time_required: ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error assigning task:', error);
+      alert('Failed to assign task.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-r from-cyan-700 via-sky-800 to-indigo-900 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20">
+        <h2 className="text-center text-white text-xl font-bold mb-4">
+          Assign Task to Yourself
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <div>
+            <label className="block text-sm text-white mb-1">Employee ID</label>
+            <input
+              type="text"
+              name="employee_id"
+              value={formData.employee_id}
+              readOnly
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Employee Name</label>
+            <input
+              type="text"
+              name="employee_name"
+              value={formData.employee_name}
+              readOnly
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Role</label>
+            <input
+              type="text"
+              name="role"
+              value={formData.role}
+              readOnly
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Task Name</label>
+            <input
+              type="text"
+              name="task_name"
+              value={formData.task_name}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Assignment Date</label>
+            <input
+              type="date"
+              name="assignment_date"
+              value={formData.assignment_date}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white mb-1">Time Required (in hrs)</label>
+            <input
+              type="number"
+              step="0.1"
+              name="time_required"
+              min="0.1"
+              value={formData.time_required}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-2 rounded-md bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-semibold hover:opacity-90 transition"
+          >
+            {isSubmitting ? 'Assigning...' : 'Assign Task'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default AssignTask;

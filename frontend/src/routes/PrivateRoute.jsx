@@ -1,22 +1,28 @@
-import React from 'react'
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-
-// It's component not a function so we will return a component so we use Navigate to return the component instead of useNavigateHook 
 const PrivateRoute = ({ role, children }) => {
-    const userRole = localStorage.getItem('role');
-    if (!userRole) {
-        alert('Please login to access this page.');
-        return <Navigate to='/login' />
+  const userRole = localStorage.getItem('role');
+
+  if (!userRole) {
+    alert('Please login to access this page.');
+    return <Navigate to="/login" />;
+  }
+
+  // Support role as string or array of strings
+  if (Array.isArray(role)) {
+    if (!role.includes(userRole)) {
+      alert('You do not have permission to access this page.');
+      return <Navigate to="/login" />;
     }
-    if (userRole != role) {
-        alert('Please login to access this page.');
-
-        return <Navigate to='/login' />
+  } else {
+    if (userRole !== role) {
+      alert('You do not have permission to access this page.');
+      return <Navigate to="/login" />;
     }
+  }
 
+  return children;
+};
 
-    return children;
-}
-
-export default PrivateRoute
+export default PrivateRoute;
