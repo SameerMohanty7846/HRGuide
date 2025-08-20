@@ -1,0 +1,110 @@
+Part-4 Collaboration
+----------------------
+Doubts
+-------
+1>While working alone in the project should
+2>After pull will that new branch going to be present
+3>
+
+
+2 users Lead and Developer
+
+=>Lead writes the code for STAGE-0
+=>Lead will upoad STAGE-0 CODE IN GIT HUB
+=>Lead will add the Developer for collaboration and will tell him to do the changes which he needs
+=>Developer has permissions to change the code in GITHUB
+=>Developer will take the copy of the STAGE-0 code into his personal laptop
+=>No both Developer and Lead has the STAGE-0 CODE
+=>Stage-0 is the main code , we will not modify the Stage-0 code directly 
+
+
+=>Now the developer developed the code whiich is modified code Stage-1 Code on the top of Stage-0 code
+=>Developer has done the changes on the code in his own brach not in the mai branch
+=>Now Dev will upload the code in GITHUB 
+=>Now github is having the code of Stage-0 and Stage-1
+=>Now dev will tell the Lead that he has done the changes and uploaded the code into GITHUB
+=>Stage 0 and Stage 1 code is present in the GITHUB
+=>Lead will download the Code
+=>Now Lead is also having Stage-0 Stage-1 code 
+=>Dev is also having them
+=>In github also same thing present
+
+BUt the thing is Lead will not get those Stage-0 Stage-1 code automatically,
+=>Lead must download the codee 
+
+
+Steps in Gitbash and Github:-
+-----------------------------
+=>Lead will make the folder structure and will initialize the codes
+=>And will upload in Github creating the repository
+=>Then Lead will add the collaborators
+
+
+=>Dev will clone that repo
+=>All Devs will create their own branch(The main branch code is never chaged all the changes happen in their specific branch )
+=>We will write the code in the same branch which is created
+=>After completion he will commit the code means upload or push the code in github
+=>Dev will inform the teammates about the changes he has done in the commit
+
+=>Merger/Lead will fetch the code checks it and repushes the code
+
+
+COMMANDS:-
+-----------
+Lead
+1>will create html css js files in his folder
+2>Will create a repository in Github(Just check should both names in remote and in github should be same)
+3>Create Rpository without any changes
+4>Now follow all the steps from github
+5>in 3rd  instructiion  use git add . instead of git add README.md
+6>Rest of the steps as it is
+=>Now the Lead pushed the code in github
+7>Lead will add the collaborators  
+   in git hub=>Settings=>collaborators
+8>The devs will accept the invitations
+9>
+
+Dev
+1>First each dev will clone the project
+2>git clone==>the repo url
+3>when in one folder the project is clone the dev can work on that project
+4>The dev before writing a single line of code must create a branch
+5>FOr adding and switching a new branch:- git switch -C feature/adding-marquee-effect
+6>For viewing total branches present git branch there will be multiple branches and on which * is prsent that is our branch
+7>The each and every code we write here goes to that particular branch
+8>code in that updated
+9>Now the dev will push the code 
+          git add .
+          git commit -m "added marquee effect"
+          git push -u origin feature/adding-marquee-effect
+          
+          NOw the code is pushed into github with the specific branch name not in the main branch
+          There will be a new branch created with the specific name
+          =>There is no changes in the main it is just the change in his specific branch
+    
+10>NOw  the dev will update the Lead that the code isupdated merger it
+
+
+Lead merging part
+---------------------
+1>Now the merger will type git fetch
+2>now switch to that branch  git switch feature/adding-marquee-effect
+3>now after this the code will be visible in the merger laptop
+4>lead will change the branch to main branch git switch main
+5>git merge feature/adding-marquee-effect
+6>Now in main code Devs code has been merged
+7>Lead will upload this code into github git push origin main
+8>Now the updated code is preseent in github
+9>Now the merged is ppreseent in lead and in github but but not with the dev
+
+
+Dev will get the updated code
+--------------------------------
+1>Dev will change to main git switch main
+2>git fetch
+3>git pull======>Now the updated code is also present 
+
+
+
+
+
