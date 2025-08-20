@@ -6,6 +6,8 @@ Doubts
 2>After pull will that new branch going to be present
 3>last part fetch or pull required
 
+make a proper notes about each sep
+
 
 2 users Lead and Developer
 
