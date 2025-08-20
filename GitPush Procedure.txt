@@ -4,7 +4,7 @@ Doubts
 -------
 1>While working alone in the project should
 2>After pull will that new branch going to be present
-3>
+3>last part fetch or pull required
 
 
 2 users Lead and Developer
