@@ -673,3 +673,9 @@ node server.js
 ---
 
 Let me know if you want me to provide a ready repo or add more features!
+=================================================================================================
+1>Common things to add while creating creating the table
+2>Common methods from sequelize
+
+
+
