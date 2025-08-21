@@ -10,7 +10,6 @@ import AssignTask from './pages/AssignTask';
 import ChangePassword from './pages/ChangePassword';
 import EmployeeAttendanceReport from './pages/EmployeeAttendanceReport';
 import EmployeePayroll from './pages/EmployeePayroll';
-import EmployeePermissionList from './pages/EmployeePermissionList';
 import GrantedPermissions from './pages/GrantedPermissions';
 import HRLeavePolicy from './pages/HRLeavePolicy';
 import HRPolicy from './pages/HRPolicy';
@@ -43,7 +42,6 @@ const App = () => {
           <Route path="/admin/admindashboard" element={<AdminDashboard />} />
           <Route path="/admin/addemployee" element={<AddEmployee />} />
           <Route path="/admin/viewemployees" element={<ViewEmployees />} />
-          <Route path="/admin/permissions" element={<EmployeePermissionList />} />
           <Route path="/admin/change-password" element={<ChangePassword />} />
           <Route path="/admin/leave-policy" element={<HRLeavePolicy />} />
           <Route path="/admin/attendance-report" element={<EmployeeAttendanceReport />} />
