@@ -1,0 +1,81 @@
+// AppContext.js
+import { createContext } from 'react';
+
+const AppContext = createContext();
+
+export default AppContext;
+
+// AppState.js
+import React, { useState, useEffect } from 'react';
+import AppContext from './AppContext';
+
+const AppState = ({ children }) => {
+  const [data, setData] = useState(null); // state to hold API data
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from API on component mount
+    fetch('http://localhost:7777/admin/allusers', {
+      credentials: 'include' // if your API requires cookies/auth
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(jsonData => {
+        setData(jsonData.users); // store fetched users in state
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <AppContext.Provider value={{ data, loading, error }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+export default AppState;
+
+======================================
+import React from 'react';
+import AppState from './AppState';
+import UsersList from './UsersList'; // some component that consumes context
+
+function App() {
+  return (
+    <AppState>
+      <UsersList />
+    </AppState>
+  );
+}
+
+export default App;
+===========================================
+import React, { useContext } from 'react';
+import AppContext from './AppContext';
+
+const UsersList = () => {
+  const { data, loading, error } = useContext(AppContext);
+
+  if (loading) return <p>Loading users...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <ul>
+      {data.map(user => (
+        <li key={user.id}>{user.name} ({user.email})</li>
+      ))}
+    </ul>
+  );
+};
+
+export default UsersList;
+
