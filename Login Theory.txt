@@ -1,0 +1,61 @@
+Login Theory Backend
+=======================
+import express from "express";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+const SECRET_KEY = "mysecretkey"; // In production, keep this in env vars
+
+// 1️⃣ Login Endpoint
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  // Dummy check (normally you'd check DB)
+  if (email === "user@example.com" && password === "mypassword") {
+    // Create a JWT token
+    const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
+
+    // Store token in HttpOnly cookie
+    res.cookie("authToken", token, {//authToken is the cookie name 
+      httpOnly: true,   // Not accessible via JS
+      secure: false,    // true in production (HTTPS only)
+      sameSite: "strict"
+    });
+
+    return res.json({ message: "Login successful" });
+  } else {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+});
+
+// Middleware to check cookie
+function authMiddleware(req, res, next) {
+  const token = req.cookies.authToken;//Without cookie-parser, req.cookies would be undefined, and this line would not work.
+  if (!token) {
+    return res.status(401).json({ message: "No token, unauthorized" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);//If valid → decoded contains the payload
+    req.user = decoded; // attach user info
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+}
+
+// 2️⃣ Protected Route
+app.get("/user", authMiddleware, (req, res) => {
+  res.json({
+    message: "User info retrieved",
+    user: { email: req.user.email, name: "John Doe" } // Dummy data
+  });
+});
+
+app.listen(5000, () => {
+  console.log("Server running on http://localhost:5000");
+});
