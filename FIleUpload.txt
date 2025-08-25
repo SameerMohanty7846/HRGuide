@@ -412,3 +412,54 @@ Method	Use Case
 .array(fieldname, maxCount)          	              Multiple files from the same field
 .fields([{ name: 'field1' }, { name: 'field2' }])  	Multiple fields, each with one or more files
 .any()                                             	Accepts files from any field (less controlled)
+
+
+//complete file:-
+// upload.js
+
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// Set the uploads directory
+const uploadDir = path.join(process.cwd(), 'uploads');
+
+// Ensure it exists
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    const baseName = path.basename(file.originalname, ext);
+    cb(null, `${baseName}-${uniqueSuffix}${ext}`);
+  },
+});
+
+// File filter: allow only images
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'));
+  }
+};
+
+// Export the multer middleware (single file field: 'image')
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+});
+
+export default upload;
